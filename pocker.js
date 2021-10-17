@@ -1,8 +1,10 @@
 const express = require('express');
+const path = require('path');
 const app=express();
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json()) 
+
 
 /* Enumeracio dels pals de la baralla */
 const pals = {
@@ -18,6 +20,9 @@ addPal(pals.DIAMANTS);
 addPal(pals.PIQUES);
 addPal(pals.CORS);
 addPal(pals.TREBOLS);
+
+/* Llista de jugadors { TOKEN:token ,CARTES:cinc cartes};*/
+let jugadors = [];
 
 
 ///////////////////////////////
@@ -60,18 +65,44 @@ app.get('/api/cartes/:pal', (req, res)=>{ // Cartes d'un pal
 ///////////////////////////////////////
 //
 app.get('/api/cartes/:donamcinc',(req,res)=>{ /* Cinc cartes al-leatories */
-    console.log(`Cartes: ${cartes.length}`);
+    //console.log(`Cartes: ${cartes.length}`);
     let cinc = [];
     for(let i = 0; i < 5;i++)
     {
         let card = cartes[Math.floor(Math.random()*cartes.length)];
         let index = cartes.indexOf(card);
-        console.log(card);
         cinc.push(card);
         cartes.splice(index,1);
     }
     console.log(`Cartes: ${cartes.length}`);
-    res.send(cinc);
+    let jugador = { TOKEN:token(),CARTES:cinc,toString: () =>
+         {
+            let player = "<div id='caixa'> <p><b>jugador: </b>" + jugador.TOKEN + '<br></p>' + "<p><b>cartes: </b><br>";
+            let cont = 1;
+            jugador.CARTES.forEach(x =>
+                 {
+                    player += ( "<b>" + cont.toString() + ")</b>" + "  " + x.valor.toString() + " " + x.pal + " " + x.color+" ; <br>" );
+                    cont++;
+                 })
+            player += "</p></div>"
+            return player 
+        }
+    };
+
+    jugadors.push(jugador);
+    res.send(jugador.toString());
+    
 });
 
 app.listen(3000, ()=>console.log('inici servidor'));
+
+
+//////////////////////////////
+//
+//  RETORNA UN TOKEN ALEATORI ( PER IDENTIFICAR A CADA JUGADOR )
+//
+/////////////////////////////////////
+//
+function token() {
+    return Math.random().toString(36).substr(2); // Passar nombre a base 36 i eliminar `0.`
+};
