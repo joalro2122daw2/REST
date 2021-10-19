@@ -44,6 +44,14 @@ function addPal(pal)
     }
 }
 
+function extreuCarta()
+{
+    let card = cartes[Math.floor(Math.random()*cartes.length)];
+    let index = cartes.indexOf(card);
+    cartes.splice(index,1);
+    return card;
+}
+
 /* GET */
 app.get('/api/cartes', (req, res)=>res.send(cartes)); /* Tota la baralla */
 /*
@@ -69,10 +77,8 @@ app.get('/api/cartes/:donamcinc',(req,res)=>{ /* Cinc cartes al-leatories */
     let cinc = [];
     for(let i = 0; i < 5;i++)
     {
-        let card = cartes[Math.floor(Math.random()*cartes.length)];
-        let index = cartes.indexOf(card);
+        let card = extreuCarta();
         cinc.push(card);
-        cartes.splice(index,1);
     }
     console.log(`Cartes: ${cartes.length}`);
     let jugador = { TOKEN:token(),CARTES:cinc,toString: () =>
@@ -84,14 +90,44 @@ app.get('/api/cartes/:donamcinc',(req,res)=>{ /* Cinc cartes al-leatories */
                     player += ( "<b>" + cont.toString() + ")</b>" + "  " + x.valor.toString() + " " + x.pal + " " + x.color+" ; <br>" );
                     cont++;
                  })
-            player += "</p></div>"
-            return player 
+            player += "</p></div>";
+            player += "<form action='' method='PUT'>" +
+            "<label>Descarts ( nombres de cartes sense espais ):</label>" +
+            "<input type='text id='tbdescartes'>" +
+            "<input id='btdescart' type='button' value='Envia' onclick='functionPut();' />" +
+            "</form>"+
+            "<script>"+
+                "function functionPut(){"+
+                /*
+                    "let ind = document.getElementById('tbdescartes').innerText;" +
+                    "let data = ''" +
+                    "let xhr = new XMLHttpRequest();"+
+                    "xhr.withCredentials = true;" +
+                    "xhr.open('PUT', 'localhost:3000/api/cartes/"+ jugador.TOKEN + "/`${ind}`);"+
+                    "xhr.send(data);}"+
+                */"}"
+            "</script>";
+            return player
         }
     };
-
     jugadors.push(jugador);
     res.send(jugador.toString());
-    
+});
+
+
+/* PUT */
+app.put('/api/cartes/:jugador/:descart', (req, res)=>{
+    let token = req.params.jugador;
+    let index = req.params.descart;
+    let player = jugadors.find(x => x.TOKEN == token)
+    for(let i = 0; i < index.length;i++)
+    {
+        let ind = parseInt(index[i])-1;
+        let card = extreuCarta();
+        player.CARTES[ind] = card;
+    }
+    console.log(`Cartes ${cartes.length}`);
+    res.send(player.toString());
 });
 
 app.listen(3000, ()=>console.log('inici servidor'));
