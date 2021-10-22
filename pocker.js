@@ -3,7 +3,18 @@ const path = require('path');
 const app=express();
 
 app.use(express.urlencoded({extended: true}));
-app.use(express.json()) 
+app.use(express.json()); 
+let fs = require('fs');
+const { send } = require('process');
+
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    next();
+  });
+  app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Methods', '*');
+    next();
+  });
 
 
 /* Enumeracio dels pals de la baralla */
@@ -83,31 +94,14 @@ app.get('/api/cartes/:donamcinc',(req,res)=>{ /* Cinc cartes al-leatories */
     console.log(`Cartes: ${cartes.length}`);
     let jugador = { TOKEN:token(),CARTES:cinc,toString: () =>
          {
-            let player = "<div id='caixa'> <p><b>jugador: </b>" + jugador.TOKEN + '<br></p>' + "<p><b>cartes: </b><br>";
+            let player ="<b>" + "Id jugador: " + "</b>" + jugador.TOKEN + "<br>";
             let cont = 1;
             jugador.CARTES.forEach(x =>
-                 {
-                    player += ( "<b>" + cont.toString() + ")</b>" + "  " + x.valor.toString() + " " + x.pal + " " + x.color+" ; <br>" );
-                    cont++;
-                 })
-            player += "</p></div>";
-            player += "<form action='' method='PUT'>" +
-            "<label>Descarts ( nombres de cartes sense espais ):</label>" +
-            "<input type='text id='tbdescartes'>" +
-            "<input id='btdescart' type='button' value='Envia' onclick='functionPut();' />" +
-            "</form>"+
-            "<script>"+
-                "function functionPut(){"+
-                /*
-                    "let ind = document.getElementById('tbdescartes').innerText;" +
-                    "let data = ''" +
-                    "let xhr = new XMLHttpRequest();"+
-                    "xhr.withCredentials = true;" +
-                    "xhr.open('PUT', 'localhost:3000/api/cartes/"+ jugador.TOKEN + "/`${ind}`);"+
-                    "xhr.send(data);}"+
-                */"}"
-            "</script>";
-            return player
+                {
+                   player += "<b>"+cont.toString()+") </b>" + " " + x.valor.toString()+" "+x.pal+"  " + x.color + "<br>";
+                   cont++;
+                })
+            return player;
         }
     };
     jugadors.push(jugador);
@@ -120,6 +114,7 @@ app.put('/api/cartes/:jugador/:descart', (req, res)=>{
     let token = req.params.jugador;
     let index = req.params.descart;
     let player = jugadors.find(x => x.TOKEN == token)
+    
     for(let i = 0; i < index.length;i++)
     {
         let ind = parseInt(index[i])-1;
@@ -128,6 +123,8 @@ app.put('/api/cartes/:jugador/:descart', (req, res)=>{
     }
     console.log(`Cartes ${cartes.length}`);
     res.send(player.toString());
+    
+    //console.log(token);
 });
 
 app.listen(3000, ()=>console.log('inici servidor'));
