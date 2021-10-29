@@ -1,4 +1,4 @@
-//Creamos un nuevo objeto javascript llamado ObjetoAjax
+//Crea un nuevo objeto javascript llamado ObjetoAjax
 //función constructora.
 function ObjetoAjax () {
     //recogemos el objeto XMLHttpRequest en una variable

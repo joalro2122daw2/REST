@@ -1,3 +1,10 @@
+///////////////////////////
+//
+// CREA UN OBJECTE AJAX QUE FA UNA PETICIO GET AL SERVIDOR QUE RESPON ENVIANT
+// EL TOKEN DEL JUGADOR I CINC CARTES ALEATORIES
+//
+/////////////////////////////////////////////
+//
 function donamcinc() { //al usar el botón ...
     pagina =new ObjetoAjax(); //instanciar objeto Ajax
     ajax=pagina.objeto; //devolver el XMLHttpRequest
@@ -18,6 +25,13 @@ function donamcinc() { //al usar el botón ...
     document.getElementById("fmDescarts").hidden = false;
     }
 
+    ///////////////////////////////
+    //
+    //   CREA UN OBJECTE AJAX QUE FA UNA PETICIO PUT AMB EL TOKEN DEL JUGADOR
+    //   I LA QUANTITAT DE CARTES ALEATORIES QUE S'HAN DESCARTAT
+    //
+    //////////////////////////////////////
+    //
     function descarts(){
         document.getElementById("fmDescarts").hidden = true;
         // Obtenir el token del jugador
@@ -26,11 +40,6 @@ function donamcinc() { //al usar el botón ...
         let aux = document.createElement("label");
         // Obtenir els nombres de les cartes a canviar
         let descart = document.getElementById("tbDescarts").value;
-        /*
-        aux.id = "lbaux";
-        aux.innerText = token + " " + descart;
-        document.body.appendChild(aux);
-        */
         pagina =new ObjetoAjax(); //instanciar objeto Ajax
         ajax=pagina.objeto; //devolver el XMLHttpRequest
         ajax.open("PUT","http://localhost:3000/api/cartes/"+token+"/"+descart,true); //preparar envio

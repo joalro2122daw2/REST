@@ -25,7 +25,7 @@ const pals = {
     DIAMANTS:"diamants"
 };
 
-/* Construir la baralla de cartes */
+/* Construir la baralla de cartes { CARTA:unicode, VALOR:nombre, COLOR:string }*/
 let cartes = [];
 addPal(pals.DIAMANTS);
 addPal(pals.PIQUES);
@@ -47,10 +47,23 @@ function addPal(pal)
 {
     let color ="vermell";
     if(pal == pals.TREBOLS || pal == pals.PIQUES)
-        color = "negre";
-    for(let i = 1; i < 14; i++)
     {
-        let carta = { valor:i,pal:pal,color:color};
+        color = "negre";
+    }
+    arraypal = [];
+    if(pal == pals.TREBOLS)
+        arraypal = ['🃑','🃒','🃓','🃔','🃕','🃖','🃗','🃘','🃙','🃚','🃛','🃝','🃞'];
+    else if(pal == pals.CORS)
+        arraypal = ['🂱','🂢','🂣','🂴','🂵','🂶','🂷','🂸','🂹','🂺','🂻','🂽','🂾']
+    else if(pal == pals.PIQUES)
+        arraypal = ['🂡','🂢','🂣','🂤','🂥','🂦','🂧','🂨','🂩','🂪','🂫','🂭','🂮']
+    else if(pal == pals.DIAMANTS)
+        arraypal = ['🃁','🃂','🃃','🃄','🃅','🃆','🃇','🃈','🃉','🃊','🃋','🃍','🃎']
+    for(let i = 1; i < 13; i++)
+    {
+        unicode = arraypal[i];
+        //let carta = { valor:i,pal:pal,color:color};
+        let carta = { CARTA:unicode,VALOR:i,COLOR:color};
         cartes.push(carta);
     }
 }
@@ -98,7 +111,8 @@ app.get('/api/cartes/:donamcinc',(req,res)=>{ /* Cinc cartes al-leatories */
             let cont = 1;
             jugador.CARTES.forEach(x =>
                 {
-                   player += "<b>"+cont.toString()+") </b>" + " " + x.valor.toString()+" "+x.pal+"  " + x.color + "<br>";
+                   //player += "<b>"+cont.toString()+") </b>" + " " + x.valor.toString()+" "+x.pal+"  " + x.color + "<br>";
+                   player += "<b>"+cont.toString()+") </b>" + x.CARTA+"<br>";
                    cont++;
                 })
             return player;

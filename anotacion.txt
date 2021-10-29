@@ -1,0 +1,5 @@
+- Tengo que hacer añadir un cuadro de texto para que el jugador introduzca las cartas de las que quiere descartar y luego hacer un put al servidor con la informacion contenida en la caja.
+
+- Hacer el put desde postman y después usando "code" ( icono </> esquina superior derecha ) y seleccionando javascript-xhr copiar el codigo para la funcion a añadir al callback del boton en el html de la peticion put.
+
+ 
