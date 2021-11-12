@@ -31,6 +31,7 @@ public class BarallaPocker
        {
            switch(p)
            {
+               // Surrogate pairs
                case piques:
                        unicodepairs = Arrays.asList("\uD83C\uDCA1","\uD83C\uDCA2","\uD83C\uDCA3","\uD83C\uDCA4",
                                "\uD83C\uDCA5","\uD83C\uDCA6","\uD83C\uDCA7","\uD83C\uDCA8","\uD83C\uDCA9",
@@ -74,12 +75,19 @@ public class BarallaPocker
         ArrayList<Carta> ma = new ArrayList<>();
         for(int i = 0; i < 5;i++)
         {
-            Random r  = new Random();
-            int num = (int)(Math.random() * (baralla.size()-1));
-            ma.add(baralla.get(num));
-            baralla.remove(num);
+            Carta carta = treuUna();
+            ma.add(carta);
         }
         return ma;
+    }
+
+    public Carta treuUna()
+    {
+        Random r  = new Random();
+        int num = (int)(Math.random() * (baralla.size()-1));
+        Carta carta = baralla.get(num);
+        baralla.remove(num);
+        return carta;
     }
 
 
