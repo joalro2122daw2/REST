@@ -1,0 +1,22 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Pocker</title>
+<script type="text/javascript" src="objecteAjax.js"></script>
+<script src="metodesCartes.js" type="text/javascript"></script>
+
+</head>
+<body>
+<h1>Joc de Pocker JOALRO</h1>
+<h3><input id="btCartes" type="button" onclick="donamcinc()" value="Obtenir cartes"></h3>
+<!-- insertar en el siguiente id el resultado de la consulta: -->
+<p id="cont" hidden="true" >Jugador:</p>
+<!-- Formulario oculto para los descartes -->
+<form id="fmDescarts" hidden = 'true'>
+    <label>Descarts: (nombres de les cartes sense espais)</label>
+    <input type="text" id="tbDescarts">
+    <input type="button" id="btDescarts" onclick="descarts()" value="Descarts">
+</form>
+</body>
+</html>
