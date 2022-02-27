@@ -13,8 +13,6 @@ public class PockerResource {
     static BarallaPocker baralla;
     static ArrayList<Jugador> jugadors;
 
-
-
     @GET
     @Path("/totes")
     @Produces(MediaType.TEXT_PLAIN)
@@ -37,25 +35,31 @@ public class PockerResource {
         ArrayList<Carta> ma = baralla.treuCinc();
         Jugador jugador = new Jugador(ma);
         jugadors.add(jugador);
+
         return jugador + " Queden: " + baralla.baralla.size() + " cartes";
+
+        //return "Enviat";
     }
 
     @PUT
-    @Path("/descart")
+    //@Path("/descart)
+    @Path("/descart/{token}/{desc}")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
-    public String canviarCartes(@FormParam("token") String token,@FormParam("descart") String descart)
+    //public String canviarCartes(@FormParam("token") String token,@FormParam("descart") String descart)
+    public String canviarCartes(@PathParam("token") String token,@PathParam("desc") String desc)
     {
         //Jugador player = (Jugador) jugadors.stream().filter(jugador -> jugador.token.equals(token));
         Jugador player = obtenirJugador(token);
-        for(int i = 0;i < descart.length();i++)
+        for(int i = 0;i < desc.length();i++)
         {
-            int index =Integer.parseInt(descart.charAt(i)+"")-1;
+            int index =Integer.parseInt(desc.charAt(i)+"")-1;
             Carta nova = baralla.treuUna();
             player.ma.set(index,nova);
         }
         return player + " Queden: " + baralla.baralla.size() + " cartes";
     }
+
 
     private static Jugador obtenirJugador(String token)
     {
