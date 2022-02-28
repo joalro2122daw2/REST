@@ -1,12 +1,9 @@
 const express = require('express');
-const path = require('path');
 const app=express();
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.static('publica'));
 app.use(express.json()); 
-let fs = require('fs');
-const { send } = require('process');
 
 
 /* Enumeracio dels pals de la baralla */
@@ -17,16 +14,19 @@ const pals = {
     DIAMANTS:"diamants"
 };
 
-/* Construir la baralla de cartes { CARTA:unicode, VALOR:nombre, COLOR:string }*/
+/* Per a la baralla de cartes { CARTA:unicode, VALOR:nombre, COLOR:string }*/
 let cartes = [];
+/* Llista de jugadors { TOKEN:token ,CARTES:cinc cartes};*/
+let jugadors = [];
+
+
 addPal(pals.DIAMANTS);
 addPal(pals.PIQUES);
 addPal(pals.CORS);
 addPal(pals.TREBOLS);
-//cartes.forEach(carta => console.log(carta.CARTA));
 
-/* Llista de jugadors { TOKEN:token ,CARTES:cinc cartes};*/
-let jugadors = [];
+
+
 
 
 
@@ -67,7 +67,6 @@ app.get('/api/cartes/:pal', (req, res)=>{ // Cartes d'un pal
 ///////////////////////////////////////
 //
 app.get('/api/cartes/:donamcinc',(req,res)=>{ /* Cinc cartes al-leatories */
-    //console.log(`Cartes: ${cartes.length}`);
     let ma = [];
     for(let i = 0; i < 5;i++)
     {
@@ -75,23 +74,8 @@ app.get('/api/cartes/:donamcinc',(req,res)=>{ /* Cinc cartes al-leatories */
         ma.push(card);
     }
     console.log(`Cartes: ${cartes.length}`);
-    /*
-    let jugador = { TOKEN:token(),CARTES:ma,toString: () =>
-         {
-            let player ="<b>" + "Id jugador: " + "</b>" + jugador.TOKEN + "<br>";
-            let cont = 1;
-            jugador.CARTES.forEach(x =>
-                {                   
-                   player += "<b>"+cont.toString()+") </b>" + x.CARTA+"<br>";
-                   cont++;
-                })
-            return player;
-        }
-    };
-    */
     let jugador = { TOKEN:token(),CARTES:ma};
     jugadors.push(jugador);
-    //res.send(jugador.toString());
     res.send(JSON.stringify(jugador));
 });
 
@@ -108,8 +92,7 @@ app.put('/api/cartes/:jugador/:descart', (req, res)=>{
         let card = extreuCarta();
         player.CARTES[ind] = card;
     }
-    console.log(`Cartes ${cartes.length}`);
-    //res.send(player.toString());    
+    console.log(`Cartes ${cartes.length}`); 
     res.send(JSON.stringify(player));
 });
 
@@ -127,7 +110,7 @@ app.listen(3000, ()=>console.log(`inici servidor ${cartes.length} cartes a la ba
 /////////////////////////////////////
 //
 function token() {
-    return Math.random().toString(36).substr(2); // Passar nombre a base 36 i eliminar `0.`
+    return Math.random().toString(36).substring(2); // Passar nombre a base 36 i eliminar `0.`
 };
 
 /////////////////////
@@ -140,7 +123,7 @@ function token() {
 function extreuCarta()
 {
     let card = cartes[Math.floor(Math.random()*cartes.length)];
-    let index = cartes.indexOf(card-1);
+    let index = cartes.indexOf(card);
     cartes.splice(index,1);
     return card;
 }
@@ -159,20 +142,18 @@ function addPal(pal)
     {
         color = "negre";
     }
-    arraypal = [];
+    let arraypal;
     if(pal == pals.TREBOLS)
         arraypal = ['🃑','🃒','🃓','🃔','🃕','🃖','🃗','🃘','🃙','🃚','🃛','🃝','🃞'];
     else if(pal == pals.CORS)
-        arraypal = ['🂱','🂢','🂣','🂴','🂵','🂶','🂷','🂸','🂹','🂺','🂻','🂽','🂾']
+        arraypal = ['🂱','🂢','🂣','🂴','🂵','🂶','🂷','🂸','🂹','🂺','🂻','🂽','🂾'];
     else if(pal == pals.PIQUES)
-        arraypal = ['🂡','🂢','🂣','🂤','🂥','🂦','🂧','🂨','🂩','🂪','🂫','🂭','🂮']
+        arraypal = ['🂡','🂢','🂣','🂤','🂥','🂦','🂧','🂨','🂩','🂪','🂫','🂭','🂮'];
     else if(pal == pals.DIAMANTS)
-        arraypal = ['🃁','🃂','🃃','🃄','🃅','🃆','🃇','🃈','🃉','🃊','🃋','🃍','🃎']
-    for(let i = 0; i < 13; i++)
-    {
-        unicode = arraypal[i];
-        //let carta = { valor:i,pal:pal,color:color};
-        let carta = { CARTA:unicode,VALOR:i+1,COLOR:color};
+        arraypal = ['🃁','🃂','🃃','🃄','🃅','🃆','🃇','🃈','🃉','🃊','🃋','🃍','🃎'];
+
+    arraypal.forEach(pal => {
+        let carta = { CARTA:pal,VALOR:pal.index+1,COLOR:color};
         cartes.push(carta);
-    }
+    })
 }
